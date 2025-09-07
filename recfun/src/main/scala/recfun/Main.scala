@@ -14,8 +14,10 @@ object Main {
   /**
    * Exercise 1
    */
-  def pascal(c: Int, r: Int): Int = ???
-
+  def pascal(c: Int, r: Int): Int = {
+    if( c == 0 || c == r ) 1 // base case: (c,r) is triangle edge
+    else { pascal(c-1, r-1) + pascal(c, r-1) } // recursion: sum of two numbers from previous row
+  }
   /**
    * Exercise 2
    */
