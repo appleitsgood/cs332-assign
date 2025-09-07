@@ -46,5 +46,16 @@ object Main {
   /**
    * Exercise 3
    */
-  def countChange(money: Int, coins: List[Int]): Int = ???
+  def countChange(money: Int, coins: List[Int]): Int = {
+    // base case: money is exactly spent
+    if( money == 0 ) 1
+    else if( money < 0 || coins.isEmpty) 0 // money is below 0 or no coins left to use
+
+    // recursion
+    else {
+      countChange(money - coins.head, coins) +  // use head coin
+      countChange(money, coins.tail) // keep money, skip to next coin
+    }
+  }
+
 }
