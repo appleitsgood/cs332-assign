@@ -1,6 +1,8 @@
 package recfun
 import common._
 
+import scala.annotation.tailrec
+
 object Main {
   def main(args: Array[String]) {
     println("Pascal's Triangle")
@@ -21,7 +23,25 @@ object Main {
   /**
    * Exercise 2
    */
-  def balance(chars: List[Char]): Boolean = ???
+  def balance(chars: List[Char]): Boolean = {
+    @tailrec
+    def check(chars: List[Char], count: Int): Boolean = {
+      // base case: string is empty || count is below 0 (parens don't match)
+      if (chars.isEmpty) count == 0
+      else if (count < 0) false
+
+      // recursion: count parentheses
+      else {
+        val head = chars.head
+        if (head == '(') check(chars.tail, count + 1)
+        else if (head == ')') check(chars.tail, count - 1)
+        else check(chars.tail, count)
+      }
+    }
+    check(chars, 0)
+    // what if no parens in sentence..?
+  }
+
 
   /**
    * Exercise 3
