@@ -86,7 +86,7 @@ class FunSetSuite extends FunSuite {
    * Once you finish your implementation of "singletonSet", exchange the
    * function "ignore" by "test".
    */
-  ignore("singletonSet(1) contains 1") {
+  test("singletonSet(1) contains 1") {
     
     /**
      * We create a new instance of the "TestSets" trait, this gives us access
@@ -101,12 +101,125 @@ class FunSetSuite extends FunSuite {
     }
   }
 
-  ignore("union contains all elements") {
+  test("union contains all elements") {
     new TestSets {
       val s = union(s1, s2)
+
+      println("The given sets are: ")
+      printSet(s1)
+      printSet(s2)
+
+      print("The result of union is set is: ")
+      printSet(s)
+
       assert(contains(s, 1), "Union 1")
       assert(contains(s, 2), "Union 2")
       assert(!contains(s, 3), "Union 3")
     }
   }
+
+  test("intersect returns only common elements") {
+    new TestSets {
+      val s = union(s1, s2)    // {1, 2}
+      val r = union(s1, s3)    // {1, 3}
+      val i = intersect(s, r)  // {1}
+
+      println("The given sets are: ")
+      printSet(s)
+      printSet(r)
+
+      print("The result of intersect is: ")
+      printSet(i)
+
+      assert(contains(i, 1), "Intersect should contain 1")
+      assert(!contains(i, 2), "Intersect should not contain 2")
+      assert(!contains(i, 3), "Intersect should not contain 3")
+    }
+  }
+
+  test("diff return elements in the first set that's not in the other set") {
+    new TestSets {
+      val s = union(s1, s2)   // {1, 2}
+      val r = union(s1, s3)   // {1, 3}
+
+      println("The given sets are: ")
+      printSet(s)
+      printSet(r)
+
+      val d = diff(s, r)      // {2}
+
+      print("The result of diff is: ")
+      printSet(d)
+
+      assert(!contains(d, 1), "1 is not the difference")
+      assert(contains(d, 2), "2 is the difference")
+      assert(!contains(d, 3), "3 is not the difference")
+    }
+  }
+
+  test("filter return elements that satisfy the predicate") {
+    new TestSets {
+      val s = union(s2, s3)    // {2, 3}
+      val isEven: Int => Boolean = x => x % 2 == 0
+
+      println("predicate: the number is even")
+      println("The given set is: ")
+      printSet(s)
+      println("predicate: the number is even")
+
+      val f = filter(s, isEven)    // {2}
+      print("The result of filter is: ")
+      printSet(f)
+
+      assert(contains(f, 2), "2 should be included after filtering")
+      assert(!contains(f, 3), "3 should not be included after filtering")
+    }
+  }
+
+  test("forall should return true if all elements satisfy the predicate") {
+    new TestSets {
+      val s = union(s2, s3)    // {2, 3}
+
+      println("The given set is: ")
+      printSet(s)
+
+      assert(!forall(s, x => x % 2 == 0), "not all elements are even (3 fails)")
+      assert(forall(s2, x => x % 2 == 0), "all elements in {2} are even")
+    }
+  }
+
+  test("exists should return true if at least one element satisfies the predicate") {
+    new TestSets {
+      val s = union(s2, s3)    // {2, 3}
+
+      println("The given set is: ")
+      printSet(s)
+
+      assert(exists(s, x => x % 2 == 0), "there exists an even element")
+      assert(exists(s, x => x % 2 != 0), "there exists an odd element")
+      assert(!exists(s, x => x > 10), "no element greater than 10 exists")
+    }
+  }
+
+  test("map should modify all elements in the set") {
+    new TestSets {
+      val s = union(s2, s3)   // {2, 3}
+
+
+      println("The given set is: ")
+      printSet(s)
+      println("all elements are doubled for map operation")
+
+      val m = map(s, x => x * 2)    // {4, 6}
+
+      print("The result of map is: ")
+      printSet(m)
+
+      assert(contains(m, 4), "4 should be in the mapped set")
+      assert(contains(m, 6), "6 should be in the mapped set")
+      assert(!contains(m, 2), "2 should not be in the mapped set")
+      assert(!contains(m, 3), "3 should not be in the mapped set")
+    }
+  }
+
 }
