@@ -2,6 +2,8 @@
 target/
 project/target/
 project/project/
+recfun/.bsp/
+recfun/lib_managed/
 
 # IntelliJ IDEA
 .idea/
