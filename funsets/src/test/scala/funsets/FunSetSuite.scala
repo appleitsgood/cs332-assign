@@ -105,13 +105,6 @@ class FunSetSuite extends FunSuite {
     new TestSets {
       val s = union(s1, s2)
 
-      println("The given sets are: ")
-      printSet(s1)
-      printSet(s2)
-
-      print("The result of union is set is: ")
-      printSet(s)
-
       assert(contains(s, 1), "Union 1")
       assert(contains(s, 2), "Union 2")
       assert(!contains(s, 3), "Union 3")
@@ -124,13 +117,6 @@ class FunSetSuite extends FunSuite {
       val r = union(s1, s3)    // {1, 3}
       val i = intersect(s, r)  // {1}
 
-      println("The given sets are: ")
-      printSet(s)
-      printSet(r)
-
-      print("The result of intersect is: ")
-      printSet(i)
-
       assert(contains(i, 1), "Intersect should contain 1")
       assert(!contains(i, 2), "Intersect should not contain 2")
       assert(!contains(i, 3), "Intersect should not contain 3")
@@ -141,15 +127,7 @@ class FunSetSuite extends FunSuite {
     new TestSets {
       val s = union(s1, s2)   // {1, 2}
       val r = union(s1, s3)   // {1, 3}
-
-      println("The given sets are: ")
-      printSet(s)
-      printSet(r)
-
       val d = diff(s, r)      // {2}
-
-      print("The result of diff is: ")
-      printSet(d)
 
       assert(!contains(d, 1), "1 is not the difference")
       assert(contains(d, 2), "2 is the difference")
@@ -161,15 +139,7 @@ class FunSetSuite extends FunSuite {
     new TestSets {
       val s = union(s2, s3)    // {2, 3}
       val isEven: Int => Boolean = x => x % 2 == 0
-
-      println("predicate: the number is even")
-      println("The given set is: ")
-      printSet(s)
-      println("predicate: the number is even")
-
       val f = filter(s, isEven)    // {2}
-      print("The result of filter is: ")
-      printSet(f)
 
       assert(contains(f, 2), "2 should be included after filtering")
       assert(!contains(f, 3), "3 should not be included after filtering")
@@ -180,9 +150,6 @@ class FunSetSuite extends FunSuite {
     new TestSets {
       val s = union(s2, s3)    // {2, 3}
 
-      println("The given set is: ")
-      printSet(s)
-
       assert(!forall(s, x => x % 2 == 0), "not all elements are even (3 fails)")
       assert(forall(s2, x => x % 2 == 0), "all elements in {2} are even")
     }
@@ -191,9 +158,6 @@ class FunSetSuite extends FunSuite {
   test("exists should return true if at least one element satisfies the predicate") {
     new TestSets {
       val s = union(s2, s3)    // {2, 3}
-
-      println("The given set is: ")
-      printSet(s)
 
       assert(exists(s, x => x % 2 == 0), "there exists an even element")
       assert(exists(s, x => x % 2 != 0), "there exists an odd element")
@@ -204,16 +168,7 @@ class FunSetSuite extends FunSuite {
   test("map should modify all elements in the set") {
     new TestSets {
       val s = union(s2, s3)   // {2, 3}
-
-
-      println("The given set is: ")
-      printSet(s)
-      println("all elements are doubled for map operation")
-
       val m = map(s, x => x * 2)    // {4, 6}
-
-      print("The result of map is: ")
-      printSet(m)
 
       assert(contains(m, 4), "4 should be in the mapped set")
       assert(contains(m, 6), "6 should be in the mapped set")
