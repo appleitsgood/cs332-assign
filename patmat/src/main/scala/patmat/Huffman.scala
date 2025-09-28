@@ -164,6 +164,7 @@ object Huffman {
       case (Fork(left, right, _, _), 0 :: rest) => decodeLoop(left, rest)
       case (Fork(left, right, _, _), 1 :: rest) => decodeLoop(right, rest)
       case (_, Nil) => Nil
+      case _ => Nil
     }
     decodeLoop(tree, bits)
   }
