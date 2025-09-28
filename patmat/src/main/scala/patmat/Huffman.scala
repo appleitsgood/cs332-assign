@@ -195,7 +195,7 @@ object Huffman {
    * into a sequence of bits.
    */
   def encode(tree: CodeTree)(text: List[Char]): List[Bit] = {
-    def encodeChar(subtree: CodeTree, ch: Char): List[Bit] = tree match {
+    def encodeChar(subtree: CodeTree, ch: Char): List[Bit] = subtree match {
       case Leaf(c, _) if (c == ch) => Nil
       case Fork(left, right, _, _) =>
         if (chars(left).contains(ch)) 0 :: encodeChar(left, ch)
