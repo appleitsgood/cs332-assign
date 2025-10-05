@@ -103,6 +103,24 @@ class AnagramsSuite extends FunSuite {
       List("Linux", "rulez")
     )
     assert(sentenceAnagrams(sentence).toSet === anas.toSet)
-  }  
+  }
 
+  test("Memoization performance comparison") {
+    val sentence = List("I", "love", "you", "very", "much")
+
+    val t1 = System.nanoTime()
+    val res1 = sentenceAnagrams(sentence)
+    val t2 = System.nanoTime()
+    val duration1 = (t2 - t1) / 1e6
+
+    val t3 = System.nanoTime()
+    val res2 = sentenceAnagramsMemo(sentence)
+    val t4 = System.nanoTime()
+    val duration2 = (t4 - t3) / 1e6
+
+    println(s"sentenceAnagrams took $duration1 ms")
+    println(s"sentenceAnagramsMemo took $duration2 ms")
+
+    assert(res1.toSet == res2.toSet)
+  }
 }
