@@ -80,7 +80,17 @@ object Anagrams {
    *  Note that the order of the occurrence list subsets does not matter -- the subsets
    *  in the example above could have been displayed in some other order.
    */
-  def combinations(occurrences: Occurrences): List[Occurrences] = ???
+  def combinations(occurrences: Occurrences): List[Occurrences] = occurrences match {
+    case Nil => List(Nil)
+    case (ch, n) :: rest =>
+      for {
+        count <- (0 to n).toList
+        comb_found <- combinations(rest)
+      } yield {
+        if (count == 0) comb_found
+        else (ch, count) :: comb_found
+      }
+  }
 
   /** Subtracts occurrence list `y` from occurrence list `x`.
    * 
@@ -92,8 +102,13 @@ object Anagrams {
    *  Note: the resulting value is an occurrence - meaning it is sorted
    *  and has no zero-entries.
    */
-  def subtract(x: Occurrences, y: Occurrences): Occurrences = ???
-
+  def subtract(x: Occurrences, y: Occurrences): Occurrences =
+    y.foldLeft(x.toMap) {
+      case (acc, (ch, n)) =>
+        val k = acc(ch) - n
+        if (k > 0) acc.updated(ch, k)
+        else acc - ch
+    }.toList.sorted
   /** Returns a list of all anagram sentences of the given sentence.
    *  
    *  An anagram of a sentence is formed by taking the occurrences of all the characters of
@@ -134,6 +149,39 @@ object Anagrams {
    *
    *  Note: There is only one anagram of an empty sentence.
    */
-  def sentenceAnagrams(sentence: Sentence): List[Sentence] = ???
+  def sentenceAnagrams(sentence: Sentence): List[Sentence] = {
+    def getAnagram(occ: Occurrences): List[Sentence] =
+      if (occ.isEmpty) List(Nil)
+      else {
+        for {
+          comb <- combinations(occ)
+          words <- dictionaryByOccurrences.getOrElse(comb, Nil)
+          rest <- getAnagram(subtract(occ, comb))
+        } yield words :: rest
+      }
 
+    getAnagram(sentenceOccurrences(sentence))
+  }
+
+  def sentenceAnagramsMemo(sentence: Sentence): List[Sentence] = {
+    val memo = scala.collection.mutable.Map.empty[Occurrences, List[Sentence]]
+
+    def getAnagramMemo(occ: Occurrences): List[Sentence] = {
+      if (memo.contains(occ)) memo(occ)
+      else {
+        lazy val result =
+          if (occ.isEmpty) List(Nil)
+          else {
+            for {
+              comb <- combinations(occ)
+              words <- dictionaryByOccurrences.getOrElse(comb, Nil)
+              rest <- getAnagramMemo(subtract(occ, comb))
+            } yield words :: rest
+          }
+        memo.getOrElseUpdate(occ, result)
+      }
+    }
+
+    getAnagramMemo(sentenceOccurrences(sentence))
+  }
 }
