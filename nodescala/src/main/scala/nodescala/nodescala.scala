@@ -54,7 +54,7 @@ trait NodeScala {
 
     val serverSub = Future.run() { ct =>
       Future {
-        while(ct.isCancelled) {
+        while(!ct.isCancelled) {
           val next = listener.nextRequest()
           val (request, exchange) = Await.result(next, Duration.Inf)
           respond(exchange, ct, handler(request))
